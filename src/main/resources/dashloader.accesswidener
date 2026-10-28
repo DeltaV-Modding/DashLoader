@@ -1,8 +1,17 @@
-accessWidener v1 named
-accessible class net/minecraft/client/texture/Sprite$Interpolation
-accessible class net/minecraft/client/texture/Sprite$Animation
-accessible class net/minecraft/client/texture/Sprite$AnimationFrame
-accessible class net/minecraft/client/particle/ParticleManager$SimpleSpriteProvider
-accessible class net/minecraft/client/font/BitmapFont$BitmapFontGlyph
-accessible class net/minecraft/client/render/model/json/ModelOverrideList$BakedOverride
-accessible class net/minecraft/client/render/model/json/ModelOverrideList$InlinedCondition
+accessWidener v2 official
+accessible	class	net/minecraft/client/renderer/texture/SpriteContents$AnimatedTexture
+accessible	class	net/minecraft/client/renderer/texture/SpriteContents$FrameInfo
+accessible	class	net/minecraft/client/gui/font/providers/BitmapProvider$Glyph
+accessible	class	net/minecraft/client/resources/model/ModelManager$ReloadState
+accessible	class	net/minecraft/client/resources/model/ModelBakery$ModelBakerImpl
+accessible	class	com/mojang/blaze3d/font/TrueTypeGlyphProvider$GlyphEntry
+accessible	class	net/minecraft/client/gui/font/providers/UnihexProvider$Glyph
+accessible	class	net/minecraft/client/gui/font/providers/UnihexProvider$ShortContents
+accessible	class	net/minecraft/client/gui/font/providers/UnihexProvider$ByteContents
+accessible	class	net/minecraft/client/gui/font/providers/UnihexProvider$IntContents
+accessible	class	net/minecraft/client/gui/font/FontSet$SelectedGlyphs
+accessible	class	net/minecraft/client/gui/font/FontManager$Preparation
+accessible	class	net/minecraft/server/packs/FilePackResources$SharedZipFileAccess
+accessible	class	net/minecraft/client/GameLoadCookie
+accessible	method	com/mojang/blaze3d/font/TrueTypeGlyphProvider$GlyphEntry	<init>	(I)V
+accessible	method	net/minecraft/client/gui/font/providers/UnihexProvider$ByteContents	<init>	([B)V

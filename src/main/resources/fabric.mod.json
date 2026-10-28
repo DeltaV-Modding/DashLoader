@@ -1,71 +1,51 @@
 {
-	"schemaVersion" : 1,
-	"id" : "dashloader",
-	"version" : "${version}",
-	"name" : "DashLoader",
-	"description" : "Launch at the speed of Light.\n Made with love by the QuantumFusion team.\n",
-	"authors" : [
-		"!alpha",
-		"leocth",
-		"jákob"
-	],
-	"contact" : {
-		"homepage" : "https://discord.gg/VeFTrtCkrb",
-		"sources" : "https://github.com/QuantumFusionMC/DashLoader-Definition"
-	},
-	"license" : "LGPL-3.0-only",
-	"icon" : "assets/dashloader/textures/icon.png",
-	"environment" : "*",
-	"accessWidener" : "dashloader.accesswidener",
-	"mixins" : [
-		"dashloader.mixins.json"
-	],
-	"depends" : {
-		"fabricloader" : ">=0.11.3",
-		"minecraft" : "1.18.x",
-		"java" : ">=16"
-	},
-	"custom": {
-		"sodium:options": {
-			"mixin.features.model": false,
-			"mixin.features.shader": false,
-			"mixin.features.texture_updates": false
-		},
-		"dashloader:disableoption": [
-			"FAST_STATE_INIT"
-		],
-		"dashloader:dashobject" : [
-			"dev.quantumfusion.dashloader.def.data.DashIdentifier",
-			"dev.quantumfusion.dashloader.def.data.DashModelIdentifier",
-
-			"dev.quantumfusion.dashloader.def.data.model.DashBasicBakedModel",
-			"dev.quantumfusion.dashloader.def.data.model.DashBuiltinBakedModel",
-			"dev.quantumfusion.dashloader.def.data.model.DashMultipartBakedModel",
-			"dev.quantumfusion.dashloader.def.data.model.DashWeightedBakedModel",
-			"dev.quantumfusion.dashloader.def.fallback.DashMissingDashModel",
-
-			"dev.quantumfusion.dashloader.def.data.model.components.DashBakedQuad",
-
-			"dev.quantumfusion.dashloader.def.data.model.predicates.DashAndPredicate",
-			"dev.quantumfusion.dashloader.def.data.model.predicates.DashOrPredicate",
-			"dev.quantumfusion.dashloader.def.data.model.predicates.DashSimplePredicate",
-			"dev.quantumfusion.dashloader.def.data.model.predicates.DashStaticPredicate",
-
-			"dev.quantumfusion.dashloader.def.data.image.DashImage",
-			"dev.quantumfusion.dashloader.def.data.image.DashSpriteImpl",
-			"dev.quantumfusion.dashloader.def.data.image.DashMissingSprite",
-			"dev.quantumfusion.dashloader.def.data.image.DashFabricSprite",
-
-
-			"dev.quantumfusion.dashloader.def.data.font.DashBitmapFont",
-			"dev.quantumfusion.dashloader.def.data.font.DashBlankFont",
-			"dev.quantumfusion.dashloader.def.data.font.DashTrueTypeFont",
-			"dev.quantumfusion.dashloader.def.data.font.DashUnicodeFont",
-
-			"dev.quantumfusion.dashloader.def.data.blockstate.DashBlockState"
-		]
-	},
-	"breaks" : {
-		"sodium" : "<=0.1.0"
-	}
+  "schemaVersion": 1,
+  "id": "dashloader",
+  "version": "${version}",
+  "name": "DashLoader",
+  "description": "Launch at the speed of Light.",
+  "authors": [
+    "!alpha",
+    "bendy1234",
+    "leocth",
+    "Malionaro"
+  ],
+  "contact": {
+    "homepage": "https://discord.gg/VeFTrtCkrb",
+    "sources": "https://github.com/QuantumFusionMC/DashLoader-Definition"
+  },
+  "provides": [
+    "dashloader-api"
+  ],
+  "entrypoints": {
+    "dashloader": [
+      "dev.notalpha.dashloader.client.DashLoaderClient"
+    ],
+    "modmenu": [
+      "dev.notalpha.dashloader.client.ModMenuCompat"
+    ]
+  },
+  "license": "LGPL-3.0-only",
+  "icon": "dashloader/textures/icon.png",
+  "environment": "client",
+  "accessWidener": "dashloader.accesswidener",
+  "mixins": [
+    "dashloader.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "${minecraft_version}",
+    "java": ">=25"
+  },
+  "custom": {
+    "dashloader:disableoption": [
+    ],
+    "sodium:options": {
+      "mixin.features.shader.uniform": false
+    }
+  },
+  "breaks": {
+    "sodium": "<=0.1.0",
+    "fabric-api": "<0.81.0"
+  }
 }
