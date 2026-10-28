@@ -60,7 +60,12 @@ public final class HahaManager {
 			"Devin beat 7C after 5 1/2 hours",
 			// shedaniel
 			"Look at me, I am vibing up here",
-			"Doesn't break REI"
+			"Doesn't break REI",
+			// devonk15
+			"Come here often?",
+			// bendy1234
+			"We back!",
+			"No spaghetti code here..."
 	};
 
 	public static String getFact() {
@@ -73,7 +78,6 @@ public final class HahaManager {
 		if (splashLines.isEmpty()) {
 			return null;
 		}
-
 
 		return splashLines.get((int) (System.currentTimeMillis() % splashLines.size()));
 	}

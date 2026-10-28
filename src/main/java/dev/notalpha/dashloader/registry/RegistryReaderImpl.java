@@ -1,6 +1,5 @@
 package dev.notalpha.dashloader.registry;
 
-
 import dev.notalpha.dashloader.api.registry.RegistryReader;
 import dev.notalpha.dashloader.io.data.CacheInfo;
 import dev.notalpha.dashloader.registry.data.StageData;
@@ -13,7 +12,6 @@ import java.util.function.Consumer;
 @SuppressWarnings("FinalMethodInFinalClass")
 public final class RegistryReaderImpl implements RegistryReader {
 	private final StageData[] chunkData;
-
 	// Holds an array of the exported dataChunks array values.
 	private final Object[][] data;
 
@@ -35,7 +33,9 @@ public final class RegistryReaderImpl implements RegistryReader {
 			chunkData.preExport(this);
 			chunkData.export(data, this);
 			chunkData.postExport(this);
+			task.next();
 		}
+		task.finish();
 	}
 
 	@SuppressWarnings("unchecked")
