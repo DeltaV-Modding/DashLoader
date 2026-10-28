@@ -5,10 +5,10 @@ import dev.notalpha.dashloader.api.DashModule;
 import dev.notalpha.dashloader.api.registry.RegistryReader;
 import dev.notalpha.dashloader.api.registry.RegistryWriter;
 import dev.notalpha.dashloader.config.ConfigHandler;
+import dev.notalpha.hyphen.io.ByteBufferIO;
 import dev.notalpha.taski.Task;
 import dev.notalpha.taski.builtin.StepTask;
 import dev.notalpha.taski.builtin.WeightedStageTask;
-import dev.quantumfusion.hyphen.io.ByteBufferIO;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.nio.ByteBuffer;
+import org.lwjgl.system.MemoryUtil;
 
 public class MappingSerializer {
 	private final Object2ObjectMap<Class<?>, Serializer<?>> serializers;
@@ -29,7 +31,6 @@ public class MappingSerializer {
 		});
 	}
 
-
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public void save(Path dir, RegistryWriter factory, List<DashModule<?>> handlers, StepTask parent) {
 		List<WeightedStageTask.WeightedStage> tasks = new ArrayList<>();
@@ -38,7 +39,6 @@ public class MappingSerializer {
 		}
 		WeightedStageTask stageTask = new WeightedStageTask("Mapping", tasks);
 		parent.setSubTask(stageTask);
-
 
 		List<Object> objects = new ArrayList<>();
 		int i = 0;
@@ -76,34 +76,40 @@ public class MappingSerializer {
 			}
 		}
 
-		ByteBufferIO io = ByteBufferIO.createDirect(measure);
-		for (Object object : objects) {
-			if (object == null) {
-				io.putByte((byte) 0);
-			} else {
-				io.putByte((byte) 1);
-				Serializer serializer = this.serializers.get(object.getClass());
-				serializer.put(io, object);
-			}
-		}
-
+		ByteBuffer buffer = MemoryUtil.memAlloc(measure);
 		try {
+			ByteBufferIO io = ByteBufferIO.wrap(buffer);
+			for (Object object : objects) {
+				if (object == null) {
+					io.putByte((byte) 0);
+				} else {
+					io.putByte((byte) 1);
+					Serializer serializer = this.serializers.get(object.getClass());
+					serializer.put(io, object);
+				}
+			}
+
 			io.rewind();
 			IOHelper.save(path, new StepTask(""), io, measure, ConfigHandler.INSTANCE.config.compression);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		} finally {
+			buffer.position(0);
+			MemoryUtil.memFree(buffer);
 		}
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public boolean load(Path dir, RegistryReader reader, List<DashModule<?>> handlers) {
+		ByteBufferIO io;
 		try {
-			ByteBufferIO io = IOHelper.load(dir.resolve("mapping.bin"));
+			io = IOHelper.load(dir.resolve("mapping.bin"));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		try {
 			for (DashModule handler : handlers) {
-				if (io.getByte() == 0 && handler.isActive()) {
-					DashLoader.LOG.info("Recaching as " + handler.getClass().getSimpleName() + " is now active.");
-					return false;
-				} else {
+				if (io.getByte() == 1) {
 					Class<?> dataClass = handler.getDataClass();
 					Serializer<?> serializer = this.serializers.get(dataClass);
 					Object object = serializer.get(io);
@@ -111,14 +117,15 @@ public class MappingSerializer {
 					if (handler.isActive()) {
 						handler.load(object, reader, new StepTask(""));
 					}
+				} else if (handler.isActive()) {
+					DashLoader.LOG.info("Recaching as {} is now active.", handler.getClass().getSimpleName());
+					return false;
 				}
 			}
 
 			return true;
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+		} finally {
+			IOHelper.release(io);
 		}
 	}
-
-
 }
